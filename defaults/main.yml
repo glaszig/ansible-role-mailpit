@@ -1,0 +1,8 @@
+---
+mailpit_smtp_port: 1025
+mailpit_web_port: 8025
+mailpit_release: latest
+mailpit_proxy_nginx: false
+mailpit_proxy_apache: false
+mailpit_proxy_port: 80
+...

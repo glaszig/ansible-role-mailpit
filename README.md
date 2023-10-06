@@ -16,19 +16,18 @@ The default set of variables defines the the settings, mailpit will be started w
 
     mailpit_smtp_port: 1025
     mailpit_web_port: 8025
-    mailpit_path: /usr/local/bin/mailpit
     mailpit_release: latest
 
 By setting the following additional variables, you can proxy mailpit behind apache
 
     mailpit_proxy_apache: true
-    mailpit_proxy_domain: _your.mailghog.domain_
+    mailpit_proxy_domain: _your.mailpit.domain_
     mailpit_proxy_port: 80
 
 or nginx
 
     mailpit_proxy_nginx: true
-    mailpit_proxy_domain: _your.mailghog.domain_
+    mailpit_proxy_domain: _your.mailpit.domain_
     mailpit_proxy_port: 80    
 
 ### Example Playbook

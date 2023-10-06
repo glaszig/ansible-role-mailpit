@@ -1,0 +1,14 @@
+---
+- name: Converge nginx
+  hosts: all
+  vars:
+    mailpit_smtp_port: 1025
+    mailpit_web_port: 8025
+    mailpit_release: latest
+    mailpit_proxy_nginx: true
+    mailpit_proxy_domain: mailpit.lokal
+  tasks:
+  - name: "Include andrelohmann.mailpit"
+    include_role:
+      name: "andrelohmann.mailpit"
+...

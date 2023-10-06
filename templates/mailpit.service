@@ -1,0 +1,16 @@
+[Unit]
+Description=mailpit Service
+After=network.service
+
+[Service]
+User=mailpit
+Group=mailpit
+Type=simple
+ExecStart=/usr/bin/env /usr/local/bin/mailpit --listen 0.0.0.0:{{ mailpit_web_port }} --smtp 0.0.0.0:{{ mailpit_smtp_port }}
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=mailpit
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

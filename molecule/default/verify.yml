@@ -1,0 +1,21 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Get Service Status
+    ansible.builtin.systemd:
+      name: "mailpit.service"
+    register: mailpit_service_status
+
+  # - name: dump mailpit service
+  #   ansible.builtin.debug:
+  #     var: mailpit_service_status
+
+  - name: Assert mailpit.service is enabled
+    ansible.builtin.assert:
+      that: mailpit_service_status.status.ActiveState == "active"
+...

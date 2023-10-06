@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    mailpit_smtp_port: 1025
+    mailpit_web_port: 8025
+    mailpit_release: latest
+  tasks:
+  - name: "Include andrelohmann.mailpit"
+    include_role:
+      name: "andrelohmann.mailpit"
+...

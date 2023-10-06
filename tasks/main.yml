@@ -1,0 +1,100 @@
+---
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: true
+    autoremove: true
+    update_cache: true
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - curl
+    - unzip
+
+- name: Create the mailpit group
+  ansible.builtin.group:
+    name: mailpit
+    state: present
+
+- name: Create the mailpit user
+  ansible.builtin.user:
+    name: mailpit
+    group: mailpit
+    shell: /bin/false
+    create_home: false
+    state: present
+
+- name: Extract latest release number
+  when: mailpit_release == "latest"
+  block:
+
+  - name: Fetch latest mailpit release
+    ansible.builtin.shell: set -o pipefail && curl -s -o /dev/null -I -w "%{redirect_url}\n" https://github.com/axllent/mailpit/releases/latest | grep -oP "[0-9]+(\.[0-9]+)+$"
+    args:
+      executable: /bin/bash
+    register: mailpit_latest
+    changed_when: mailpit_latest.rc != 0
+
+  - name: Set mailpit_release
+    ansible.builtin.set_fact:
+      mailpit_release: "{{ mailpit_latest.stdout }}"
+
+- name: Ubuntu architecture map
+  ansible.builtin.set_fact:
+    deb_architecture:
+      aarch64: arm64
+      x86_64: amd64
+
+- name: Download mailpit
+  ansible.builtin.get_url:
+    url: https://github.com/axllent/mailpit/releases/download/v{{ mailpit_release }}/mailpit-linux-{{ deb_architecture[ansible_architecture] }}.tar.gz
+    dest: /tmp/mailpit.tar.gz
+    mode: 0755
+
+- name: Unarchive mailpit
+  ansible.builtin.unarchive:
+    src: /tmp/mailpit.tar.gz
+    dest: /tmp
+    remote_src: true
+
+- name: Copy mailpit to /usr/local/bin/mailpit
+  ansible.builtin.copy:
+    src: /tmp/mailpit
+    dest: /usr/local/bin/mailpit
+    owner: mailpit
+    group: mailpit
+    mode: 0755
+    remote_src: true
+
+- name: Add mailpit systemd unit file
+  ansible.builtin.template:
+    src: mailpit.service
+    dest: /etc/systemd/system/mailpit.service
+    mode: 0644
+
+- name: Just force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable mailpit
+  ansible.builtin.systemd:
+    name: mailpit
+    enabled: true
+
+- name: Start mailpit
+  ansible.builtin.systemd:
+    name: mailpit
+    state: started
+
+- name: Setup apache proxy
+  ansible.builtin.include_tasks: apache.yml
+  when: mailpit_proxy_apache | bool
+
+- name: Setup nginx proxy
+  ansible.builtin.include_tasks: nginx.yml
+  when: mailpit_proxy_nginx | bool
+
+...

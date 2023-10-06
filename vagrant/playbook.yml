@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+
+  vars:
+    mailpit_smtp_port: 1025
+    mailpit_web_port: 8025
+    mailpit_release: latest
+    mailpit_proxy_apache: true
+    # mailpit_proxy_nginx: true
+    mailpit_proxy_domain: mail.mailpit.lokal
+
+  roles:
+  - andrelohmann.root_colored_prompt
+  - ansible-role-mailpit
+...

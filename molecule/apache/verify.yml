@@ -1,0 +1,43 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: Get Service Status
+    ansible.builtin.systemd:
+      name: "mailpit.service"
+    register: mailpit_service_status
+
+  # - name: dump mailpit service
+  #   ansible.builtin.debug:
+  #     var: mailpit_service_status
+
+  - name: Assert mailpit.service is enabled
+    ansible.builtin.assert:
+      that: mailpit_service_status.status.ActiveState == "active"
+
+  - name: Connect to the api
+    ansible.builtin.uri:
+      url: http://127.0.0.1:80/api/v1/messages
+      method: GET
+      return_content: true
+      headers:
+        Host: "mailpit.lokal"
+    register: api_response
+
+  # - name: dump mailpit api_response
+  #   ansible.builtin.debug:
+  #     var: api_response
+
+  - name: Assert api_response was successfull
+    ansible.builtin.assert:
+      that: api_response.status == 200
+
+  - name: Assert api_response was successfull
+    ansible.builtin.assert:
+      that: api_response.json.count == 0
+
+...

@@ -2,7 +2,6 @@
 galaxy_info:
   role_name: mailpit
   author: andrelohmann
-  namespace: andrelohmann
   description: ansible galaxy role to install mailpit
   company: CloudSails GmbH
 

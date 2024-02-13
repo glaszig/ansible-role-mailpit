@@ -32,15 +32,15 @@
     ansible.builtin.set_fact:
       mailpit_release: "{{ mailpit_latest.stdout }}"
 
-- name: Ubuntu architecture map
+- name: Set architecture map
   ansible.builtin.set_fact:
-    deb_architecture:
+    arch_map:
       aarch64: arm64
       x86_64: amd64
 
 - name: Download mailpit
   ansible.builtin.get_url:
-    url: https://github.com/axllent/mailpit/releases/download/v{{ mailpit_release }}/mailpit-linux-{{ deb_architecture[ansible_architecture] }}.tar.gz
+    url: https://github.com/axllent/mailpit/releases/download/v{{ mailpit_release }}/mailpit-linux-{{ arch_map[ansible_architecture] }}.tar.gz
     dest: /tmp/mailpit.tar.gz
     mode: 0755
 

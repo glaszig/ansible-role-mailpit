@@ -64,6 +64,7 @@
     src: mailpit.service
     dest: /etc/systemd/system/mailpit.service
     mode: 0644
+  notify: Restart mailpit
   register: service_file
 
 - name: Just force systemd to reread configs

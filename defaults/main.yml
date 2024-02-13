@@ -5,4 +5,5 @@ mailpit_release: latest
 mailpit_proxy_nginx: false
 mailpit_proxy_apache: false
 mailpit_proxy_port: 80
+mailpit_args: []
 ...

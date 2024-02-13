@@ -59,6 +59,10 @@
     mode: 0755
     remote_src: true
 
+- name: Compile mailpit args
+  set_fact:
+    _mailpit_args: "{{ mailpit_args | join(' ') }}"
+
 - name: Add mailpit systemd unit file
   ansible.builtin.template:
     src: mailpit.service

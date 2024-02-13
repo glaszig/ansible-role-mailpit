@@ -1,18 +1,8 @@
 ---
 
+# ansible.builtin.unarchive requires unzip on host
 - name: Install required packages
-  ansible.builtin.apt:
-    name: "{{ packages }}"
-    state: present
-    dpkg_options: 'force-confnew,force-confdef'
-    autoclean: true
-    autoremove: true
-    update_cache: true
-    cache_valid_time: 3600
-  vars:
-    packages:
-    - curl
-    - unzip
+  ansible.builtin.package: name=unzip
 
 - name: Create the mailpit group
   ansible.builtin.group:

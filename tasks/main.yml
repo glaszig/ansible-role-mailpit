@@ -88,5 +88,3 @@
 - name: Setup nginx proxy
   ansible.builtin.include_tasks: nginx.yml
   when: mailpit_proxy_nginx | bool
-
-...

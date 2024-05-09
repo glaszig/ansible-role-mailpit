@@ -58,6 +58,7 @@
     group: mailpit
     mode: 0755
     remote_src: true
+  notify: Restart mailpit
 
 - name: Compile mailpit args
   set_fact:
